@@ -1,28 +1,38 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app">
+        <AppLayout/>
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+    import AppLayout from './components/AppLayout'
+    import firefly from './api/firefly'
+    import state from './state'
 
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'App',
+        components: {
+            AppLayout
+        },
+        data() {
+            return {
+                state
+            }
+        },
+        created() {
+            firefly.ready().then(api => {
+                console.log('firefly wallet is ready!')
+                this.state.appVersion = firefly.version
+                this.state.accountId = firefly.accountId
+                console.log(firefly.accountId)
+                // setTimeout(() => {
+                //     this.state.appVersion = '10'
+                //     console.log(state)
+                // }, 5000)
+                this.$router.replace({name: 'home'})
+            }).catch(err => {
+                console.error(err)
+            });
+        }
+    }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
