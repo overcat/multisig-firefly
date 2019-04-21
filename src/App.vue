@@ -20,18 +20,16 @@
             }
         },
         created() {
+            // this.$router.replace({name: 'home'})
             firefly.ready().then(api => {
                 console.log('firefly wallet is ready!')
                 this.state.appVersion = firefly.version
                 this.state.accountId = firefly.accountId
-                console.log(firefly.accountId)
-                // setTimeout(() => {
-                //     this.state.appVersion = '10'
-                //     console.log(state)
-                // }, 5000)
                 this.$router.replace({name: 'home'})
             }).catch(err => {
                 console.error(err)
+                // this.$router.replace({name: 'home'})
+
             });
         }
     }
