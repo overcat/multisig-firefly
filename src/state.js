@@ -1,7 +1,11 @@
 const state = {
     accountId: null,
     appVersion: null,
-    enabledMulti: false
+    enabledMulti: false,
+    loading: true,
+    horizonUrl: null,
+    networkPassphrase: null,
+    accountName: null
 }
 
 export default state

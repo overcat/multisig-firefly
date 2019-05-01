@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from './components/Home'
 import EnableMultiSignature from './components/EnableMultiSignature'
 import Payment from './components/Payment'
+import Detail from './components/Detail'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
         path: '/payment',
         name: 'payment',
         component: Payment
+    },
+    {
+        path: '/detail',
+        name: 'detail',
+        component: Detail
     },
 ]
 
