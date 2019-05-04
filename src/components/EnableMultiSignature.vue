@@ -148,6 +148,7 @@
                         const newTransaction = new StellarSdk.Transaction(signedXDR);
                         getServer().submitTransaction(newTransaction).then(resp => {
                             this.state.loading = false
+                            this.state.enabledMulti = true
                             this.$router.push({name: 'home'})
                         }).catch(err => {
                             console.log(err)

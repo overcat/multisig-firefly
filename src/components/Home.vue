@@ -63,12 +63,12 @@
             }
         },
         mounted() {
-
             fetchTransactions(state.accountId, 100).then(resp => {
                 this.transactions = resp.data
                 this.handleTransactions()
             }).catch(err => console.log(err))
-            if (this.state.enabledMulti !== null) {
+
+            if (this.state.enabledMulti === null) {
                 this.fetchAccount()
             }
         },

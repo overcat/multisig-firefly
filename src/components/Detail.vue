@@ -14,7 +14,7 @@
             <div v-if="op.type !== unkown">
                 <span class="address">Destination: {{op.destination}}</span><br>
                 Asset: {{op.asset.code}}
-                <span v-if="op.asset.issuer">({{op.asset.issuer}})</span><br>
+                <span v-if="op.asset.issuer">(<span class="address">{{op.asset.issuer}}</span>)</span><br>
                 Amount: {{op.amount}}
             </div>
         </div>
