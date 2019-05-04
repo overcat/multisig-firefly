@@ -17,7 +17,5 @@ export function setServer() {
 }
 
 export function getServer() {
-    console.log("getServer")
-    console.log(server)
     return server
 }

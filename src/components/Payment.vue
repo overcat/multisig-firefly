@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container>
         <h1>Payment</h1>
 
         <form data-app>
@@ -25,13 +25,13 @@
             ></v-text-field>
         </form>
         <v-btn block color="secondary" dark @click="submit">Submit</v-btn>
-    </div>
+    </v-container>
 </template>
 
 
 <script>
     import state from '../state'
-    import stellar from '../api/stellar'
+    import {getServer} from '../api/stellar'
     import firefly from '../api/firefly'
     import StellarSdk from 'stellar-sdk'
     import {submitNewTransaction} from '../api/multisig'
@@ -48,6 +48,7 @@
             }
         },
         created() {
+            this.state.loading = true
             firefly.getBalances().then(balances => {
                 balances.forEach(balance => {
                     const isNative = balance.asset_type === 'native';
@@ -58,7 +59,7 @@
                         }
                     })
                 })
-                console.log(this.assets)
+                this.state.loading = false
 
             }).catch(err => {
                 console.error(err);
@@ -66,11 +67,10 @@
         },
         methods: {
             submit: function () {
-                console.log("submit")
-                console.log(this.asset)
-                stellar.loadAccount(state.accountId).then(sourceAccount => {
+                this.state.loading = true
+                getServer().loadAccount(state.accountId).then(sourceAccount => {
                     let transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
-                        fee: 100,
+                        fee: 100, // TODO
                         timebounds: {minTime: 0, maxTime: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 120}
                     }).addOperation(StellarSdk.Operation.payment({
                         destination: this.destination,
@@ -82,10 +82,24 @@
                     let xdr = transaction.toXDR("base64")
                     console.log(xdr)
                     firefly.signXDR(xdr).then(signedXDR => {
-                        submitNewTransaction(signedXDR).then(resp => console.log(resp)).catch(err => console.log(err))
+                        submitNewTransaction(signedXDR).then(resp => {
+                            this.state.loading = false
+                            this.$router.push({
+                                    name: 'detail',
+                                    params: {
+                                        txId: resp.data.id
+                                    },
+                                }
+                            )
+                        }).catch(err => {
+                            console.log(err)
+                            this.state.loading = false
+                        })
                     })
-                }).catch(err => console.log(err))
-
+                }).catch(err => {
+                    this.state.loading = false
+                    console.log(err)
+                })
             }
         },
     }

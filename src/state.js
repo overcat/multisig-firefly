@@ -1,7 +1,7 @@
 const state = {
     accountId: null,
     appVersion: null,
-    enabledMulti: false,
+    enabledMulti: null,
     loading: true,
     horizonUrl: null,
     networkPassphrase: null,

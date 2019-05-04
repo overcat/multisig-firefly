@@ -24,7 +24,7 @@ const routes = [
         component: Payment
     },
     {
-        path: '/detail',
+        path: '/detail/:txId',
         name: 'detail',
         component: Detail
     },

@@ -18,11 +18,11 @@
         },
         data() {
             return {
-                state
+                state,
             }
         },
         created() {
-            // this.$router.replace({name: 'home'})
+            this.state.loading = true
             firefly.ready().then(api => {
                 console.log('firefly wallet is ready!')
                 this.state.appVersion = api.version
@@ -33,10 +33,9 @@
                 console.log(this.state)
                 setStellarServer()
                 setMultisigServer()
-                setTimeout(() => {
-                    this.$router.replace({name: 'home'})
+                this.$router.replace({name: 'home'})
+                this.state.loading = false
 
-                }, 1000)
             }).catch(err => {
                 console.error(err)
                 // this.$router.replace({name: 'home'})

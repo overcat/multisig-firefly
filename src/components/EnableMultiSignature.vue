@@ -1,12 +1,11 @@
 <template>
-    <div>
+    <v-container>
         <h1>Settings</h1>
-
         <form>
             <h2>Signers</h2>
             <span v-for="(signer, index) in signers">
                 <h4>Signer {{index+1}}</h4>
-                AccountID: {{signer.signer_address}}<br>
+                <span class="address">AccountID: {{signer.signer_address}}</span><br>
                 Weight: {{signer.signer_weight}}<br>
             </span>
             <v-text-field
@@ -55,13 +54,37 @@
         </form>
 
 
-    </div>
+        <v-dialog
+                v-model="errorDialog"
+                max-width="290"
+        >
+            <v-card>
+                <v-card-title class="headline">Error</v-card-title>
+
+                <v-card-text>
+                    {{errorMsg}}
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                            color="green darken-1"
+                            flat="flat"
+                            @click="errorDialog = false"
+                    >
+                        OK
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+    </v-container>
 </template>
 
 
 <script>
     import state from '../state'
-    import stellar from '../api/stellar'
+    import {getServer} from '../api/stellar'
     import firefly from '../api/firefly'
     import StellarSdk from 'stellar-sdk'
 
@@ -75,7 +98,9 @@
                 low_threshold: 2,
                 signers: [],
                 signer_address: null,
-                signer_weight: 1
+                signer_weight: 1,
+                errorDialog: false,
+                errorMsg: null
             }
         },
         methods: {
@@ -91,12 +116,14 @@
             submit: function () {
                 if (!this.checkWeightAndThreshold()) {
                     console.log("checkWeightAndThreshold == false")
+                    this.errorMsg = "The sum of the Weights must be greater than high_threshold."
+                    this.errorDialog = true
                     return  // TODO
                 }
-                console.log("submit")
-                stellar.loadAccount(state.accountId).then(sourceAccount => {
+                this.state.loading = true
+                getServer().loadAccount(state.accountId).then(sourceAccount => {
                     let transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
-                        fee: 100,
+                        fee: 100,  // TODO
                         timebounds: {minTime: 0, maxTime: Math.floor(Date.now() / 1000) + 60 * 60 * 12}
                     })
                     this.signers.forEach(signer => {
@@ -116,13 +143,26 @@
 
                     transaction = transaction.build();
                     let xdr = transaction.toXDR("base64")
-                    console.log(xdr)
+
                     firefly.signXDR(xdr).then(signedXDR => {
                         const newTransaction = new StellarSdk.Transaction(signedXDR);
-                        stellar.submitTransaction(newTransaction).then(resp => console.log(resp.hash)).catch(err => console.log(err))
+                        getServer().submitTransaction(newTransaction).then(resp => {
+                            this.state.loading = false
+                            this.$router.push({name: 'home'})
+                        }).catch(err => {
+                            console.log(err)
+                            this.state.loading = false
+                            this.errorMsg = "It looks like the submission failed. Please try again later."
+                            this.errorDialog = true
+                        })
                     })
 
-                }).catch(err => console.log(err))
+                }).catch(err => {
+                    console.log(err)
+                    this.state.loading = false
+                    this.errorMsg = "Load account failed. Please try again later."
+                    this.errorDialog = true
+                })
 
             },
             checkWeightAndThreshold: function () {
@@ -133,7 +173,7 @@
     }
 </script>
 <style scoped>
-    span {
+    .address {
         word-wrap: break-word;
     }
 </style>
