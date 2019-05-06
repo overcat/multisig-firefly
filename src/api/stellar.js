@@ -5,11 +5,10 @@ let server = null
 
 export function setServer() {
     console.log("initServer: " + state.networkPassphrase + " " + state.horizonUrl)
-    if (state.networkPassphrase === 'main') {
-        // TODO: api bug
-        StellarSdk.Network.useTestNetwork()
-    } else {
+    if (state.networkPassphrase === 'test' || state.networkPassphrase === 'Public Global Stellar Network ; September 2015') {
         StellarSdk.Network.usePublicNetwork()
+    } else {
+        StellarSdk.Network.useTestNetwork()
 
     }
     server = new StellarSdk.Server(state.horizonUrl)
