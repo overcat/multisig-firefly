@@ -1,4 +1,4 @@
-import {FireFlyWallet} from 'fireflywallet-api'
+import FireFlyWallet from 'fireflywallet-api'
 
 const appname = "multisig.tools"
 const appid = ""
