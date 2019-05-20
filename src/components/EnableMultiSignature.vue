@@ -16,7 +16,7 @@
             ></v-text-field>
             <v-text-field
                     type="number"
-                    v-model="signer_weight"
+                    v-model.number="signer_weight"
                     label="Weight"
                     required
             ></v-text-field>
@@ -28,25 +28,25 @@
             <h2>Thresholds</h2>
             <v-text-field
                     type="number"
-                    v-model="master_key_weight"
+                    v-model.number="master_key_weight"
                     label="master_key_weight"
                     required
             ></v-text-field>
             <v-text-field
                     type="number"
-                    v-model="high_threshold"
+                    v-model.number="high_threshold"
                     label="high_threshold"
                     required
             ></v-text-field>
             <v-text-field
                     type="number"
-                    v-model="med_threshold"
+                    v-model.number="med_threshold"
                     label="med_threshold"
                     required
             ></v-text-field>
             <v-text-field
                     type="number"
-                    v-model="low_threshold"
+                    v-model.number="low_threshold"
                     label="low_threshold"
                     required
             ></v-text-field>
