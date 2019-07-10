@@ -1,10 +1,9 @@
 import axios from 'axios'
-import state from '../state'
 
 let API = null
 
 export function setServer() {
-    const baseURL = (state.networkPassphrase === 'Public Global Stellar Network ; September 2015' || state.networkPassphrase === 'test')  ? 'https://multisig.tools/' : 'https://testnet.multisig.tools/'  // TODO: fixme
+    const baseURL = "https://fe.vii.vip/multisig-server"
     API = axios.create({
         baseURL: baseURL,
         timeout: 10000,

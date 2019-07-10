@@ -1,4 +1,4 @@
-import StellarSdk from 'stellar-sdk'
+import StellarSdk from 'vii-sdk'
 import state from '../state'
 
 let server = null

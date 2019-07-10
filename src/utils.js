@@ -1,4 +1,4 @@
-const StellarSdk = require("stellar-sdk")
+const StellarSdk = require("vii-sdk")
 
 /**
  * @return {string}
